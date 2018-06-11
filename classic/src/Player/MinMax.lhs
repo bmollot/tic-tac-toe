@@ -25,9 +25,16 @@ minMax :: Tile -> Board -> IO Move
 minMax tile board 
   = return $ snd $ maximum scoredMoves 
   where
-  	scoredMoves = zip scores moves
-  	scores      = map (evaluateBoardMax tile . put board tile) moves 
-  	moves       = validMoves board
+    scoredMoves = zip scores moves
+    scores      = map (evaluateBoardMax tile . put board tile) moves 
+    moves       = validMoves board
+scoredMoves' tile board = zip scores moves
+  where
+    scores      = map (evaluateBoardMax tile . put board tile) moves 
+    moves       = validMoves board
+scores' tile board = map (put board tile) moves
+  where
+    moves       = validMoves board
 \end{code}
 
 1. Define the function `evaluateBoardMax tile board` to return 
@@ -37,7 +44,13 @@ minMax tile board
 
 \begin{code}
 evaluateBoardMax :: Tile -> Board -> Int
-evaluateBoardMax tile board = error "Define me!"
+evaluateBoardMax tile board = case (scoreBoard tile board) of
+  Just x -> x
+  Nothing -> minimum scores
+  where
+    scores = map (evaluateBoardMin ftile . put board ftile) moves
+    ftile = flipTile tile
+    moves = validMoves board
 \end{code}
 
 2. Dually, define the function `evaluateBoardMin tile board` to return 
@@ -47,7 +60,13 @@ evaluateBoardMax tile board = error "Define me!"
 
 \begin{code}
 evaluateBoardMin :: Tile -> Board -> Int
-evaluateBoardMin tile board = error "Define me!"
+evaluateBoardMin tile board = case (scoreBoard ftile board) of
+  Just x -> x
+  Nothing -> maximum scores
+  where
+    scores = map (evaluateBoardMax ftile . put board ftile) moves
+    ftile = flipTile tile
+    moves = validMoves board
 \end{code}
 
 That's it! Your player can never lose! 

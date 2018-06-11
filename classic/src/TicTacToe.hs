@@ -7,10 +7,11 @@ import Misc
 import Player.BestNext    (playerBestNext   )
 import Player.Human    (playerHuman   )
 import Player.Computer (playerComputer)
+import Player.MinMax (playerMinMax)
 
 player1, player2 :: Player
 player1 = playerBestNext    
-player2 = playerComputer
+player2 = playerMinMax
 
 main :: IO ()
 main = do
